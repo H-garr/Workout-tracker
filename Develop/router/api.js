@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const Workout = require("../models/excercise-workout");
+const Workout = require("../models/exercise-workout");
 
 router.post("/api/workouts", ({ body }, res) => {
   Workout.create(body)
     .then(dbTransaction => {
-        console.log("Create",dbTransaction)
+        console.log("Create -post",dbTransaction)
       res.json(dbTransaction);
     })
     .catch(err => {
@@ -12,9 +12,9 @@ router.post("/api/workouts", ({ body }, res) => {
     });
 });
 
-router.put("/api/workouts/:id", ({ body }, res) => {
-  Workout.findByIdAndUpdate(req.paramas.id,
-    {$push : {excercises : body}},
+router.put("/api/workouts/:id", ({ body, params }, res) => {
+  Workout.findByIdAndUpdate(params.id,
+    {$push : {exercises : body}},
     {new:true})
     .then(dbTransaction => {
         console.log("PUT",dbTransaction)
