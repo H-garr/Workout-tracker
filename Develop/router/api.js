@@ -21,21 +21,38 @@ router.put("/api/workouts/:id", ({ body, params }, res) => {
       res.json(dbTransaction);
     })
     .catch(err => {
+      console.log("Error",err)
       res.status(400).json(err);
+    });
+});
+router.get('/api/workouts', (req, res) => {
+  Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {
+          $sum: '$exercises.duration',
+        },
+      },
+    },
+  ])
+    .then((dbTransaction) => {
+      res.json(dbTransaction);
+    })
+    .catch((err) => {
+      res.json(err);
     });
 });
 
-router.get("/api/workouts", (req, res) => {
-  Workout.find({})
-    .sort({ date: -1 })
-    .then(dbTransaction => {
-        console.log("GET",dbTransaction)
-      res.json(dbTransaction);
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
-});
+// router.get("/api/workouts", (req, res) => {
+//   Workout.find({})
+//     .then(dbTransaction => {
+//         console.log("GET",dbTransaction)
+//         res.send(dbTransaction);
+//     })
+//     .catch(err => {
+//       res.status(400).json(err);
+//     });
+// });
 
 router.get("/api/workouts/range", (req, res) => {
     Workout.find({})
